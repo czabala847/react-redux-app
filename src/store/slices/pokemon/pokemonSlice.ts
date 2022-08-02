@@ -1,11 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
-export interface PokemonState {
-  page: number;
-  pokemons: unknown[];
-  isLoading: boolean;
-}
+import { PokemonState, SetPokemonPayload } from "./Pokemon.interface";
 
 const initialState: PokemonState = {
   page: 0,
@@ -21,8 +16,10 @@ export const pokemonSlice = createSlice({
       state.isLoading = true;
     },
 
-    setPokemons: (state, action: PayloadAction<unknown[]>) => {
-      console.log(action);
+    setPokemons: (state, action: PayloadAction<SetPokemonPayload>) => {
+      state.isLoading = false;
+      state.page = action.payload.page;
+      state.pokemons = action.payload.pokemons;
     },
   },
 });
