@@ -1,26 +1,36 @@
 import React, { useEffect } from "react";
 import { useAppDispatch } from "./store/hooks";
 import { getPokemons } from "./store/slices/pokemon";
-import { AppDispatch } from "./store/types";
+import { AppDispatch, RootState } from "./store/types";
+import { useSelector } from "react-redux";
 
 import "./App.css";
 
 export const PokemonApp: React.FC = () => {
+  const { isLoading, pokemons, page } = useSelector(
+    (state: RootState) => state.pokemon
+  );
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(getPokemons() as AppDispatch);
-  }, []);
+  const loadPokemons = (page: number = 0) => {
+    dispatch(getPokemons(page) as AppDispatch);
+  };
+
+  useEffect(() => loadPokemons(), []);
 
   return (
     <>
       <h1>PokemonApp</h1>
       <hr />
+      <span> Loading : {isLoading ? "True" : "False"} </span>
       <ul>
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
+        {pokemons.map((pokemon) => (
+          <li key={pokemon.name}> {pokemon.name} </li>
+        ))}
       </ul>
+      <button onClick={() => loadPokemons(page)} disabled={isLoading}>
+        Next
+      </button>
     </>
   );
 };
